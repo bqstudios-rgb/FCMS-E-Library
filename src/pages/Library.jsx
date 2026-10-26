@@ -33,7 +33,7 @@ export default function Library() {
     <>
       <SEO title="Library" description="Browse FCMS Library materials by level, or see what was uploaded recently." />
       <div className="banner">
-        <img className="banner-img" src="/images/library-banner.jpg" alt="" onError={hide} />
+        <img className="banner-img" src="/image/library-banner.jpg" alt="" onError={hide} />
         <h2>Library Collection</h2>
         <p>Find notes, slides and past questions.</p>
         <Link to="/search" className="hero-search"><SearchIcon size={20} />Course code, title or contributor</Link>
