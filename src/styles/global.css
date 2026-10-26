@@ -43,3 +43,23 @@
 .files-grid .file-row{flex-direction:column;align-items:flex-start;margin-bottom:0;padding:14px;gap:10px;height:100%}
 .files-grid .file-info{width:100%}
 .files-grid .file-info h4{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35;min-height:2.7em}
+.feedback{background:var(--bg-tint-cyan);border:1px solid var(--secondary);border-radius:12px;padding:28px 20px;margin:8px auto 48px;max-width:560px}
+.feedback h3{color:var(--primary);font-size:20px;text-align:center;font-weight:600;margin-bottom:4px}
+.fb-sub{color:var(--text-muted);font-size:14px;text-align:center;margin-bottom:20px}
+.feedback label{display:block;font-size:14px;font-weight:500;color:var(--primary);margin-bottom:4px}
+.feedback input[type=text],.feedback textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;margin-bottom:8px;resize:vertical}
+.feedback input:disabled{background:#F3F4F6}
+.feedback .anon{display:flex;align-items:center;gap:8px;font-weight:400;color:var(--text-main);margin-bottom:16px;cursor:pointer}
+.feedback .anon input{width:auto;margin:0}
+.fb-ok{text-align:center;color:#166534;background:var(--bg-tint-green);border-radius:8px;padding:14px;font-size:14px}
+.fb-err{color:var(--icon-pdf);font-size:14px;margin-bottom:12px}
+.feedback{background:var(--bg-tint-cyan);border:1px solid var(--secondary);border-radius:12px;padding:28px 20px;margin:8px auto 48px;max-width:560px}
+.feedback h3{color:var(--primary);font-size:20px;text-align:center;font-weight:600;margin-bottom:4px}
+.fb-sub{color:var(--text-muted);font-size:14px;text-align:center;margin-bottom:20px}
+.feedback label{display:block;font-size:14px;font-weight:500;color:var(--primary);margin-bottom:4px}
+.feedback input[type=text],.feedback textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;margin-bottom:8px;resize:vertical}
+.feedback input:disabled{background:#F3F4F6}
+.feedback .anon{display:flex;align-items:center;gap:8px;font-weight:400;color:var(--text-main);margin-bottom:16px;cursor:pointer}
+.feedback .anon input{width:auto;margin:0}
+.fb-ok{text-align:center;color:#166534;background:var(--bg-tint-green);border-radius:8px;padding:14px;font-size:14px}
+.fb-err{color:var(--icon-pdf);font-size:14px;margin-bottom:12px}

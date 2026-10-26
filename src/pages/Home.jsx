@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import Feedback from '../components/Feedback';
 
 const hide = (e) => { e.currentTarget.style.display = 'none'; };
 
@@ -31,6 +32,7 @@ export default function Home() {
             </div>
           ))}
         </div>
+        <Feedback />
       </div>
     </>
   );
