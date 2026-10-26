@@ -9,14 +9,18 @@
 *{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,sans-serif}
 [hidden]{display:none!important}
 body{background:#fff;color:#1F2937;padding:24px 16px}
-main{max-width:380px;margin:40px auto}
+main{max-width:420px;margin:30px auto}
 h1{color:#002F68;font-size:22px}
-.sub{color:#6B7280;font-size:14px;margin:4px 0 20px}
+h2{color:#002F68;font-size:16px;margin:24px 0 8px}
+.sub{color:#6B7280;font-size:14px;margin:4px 0 16px}
 label{display:block;font-size:14px;font-weight:500;color:#002F68;margin-bottom:4px}
 input{width:100%;padding:10px;border:1px solid #E5E7EB;border-radius:8px;font-size:16px;margin-bottom:14px}
 button{width:100%;padding:12px;border:none;border-radius:8px;background:#04CEFF;color:#002F68;font-weight:600;font-size:15px;cursor:pointer}
 button.alt{background:#EEF4FC}
+button.small{width:auto;padding:6px 12px;font-size:13px;background:#FDE8E8;color:#D61F1F}
 #msg{color:#D61F1F;font-size:14px;margin-top:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:8px;font-size:14px}
+.row span{overflow:hidden;text-overflow:ellipsis}
 .cf-turnstile{margin-bottom:14px}
 </style>
 </head>
@@ -34,8 +38,16 @@ button.alt{background:#EEF4FC}
 </form>
 <div id="panel" hidden>
 <p class="sub">Signed in as</p>
-<p id="who" style="margin-bottom:20px;font-weight:600"></p>
-<button id="logout" class="alt" type="button">Sign out</button>
+<p id="who" style="margin-bottom:12px;font-weight:600"></p>
+<div id="owner" hidden>
+<h2>Invite an admin</h2>
+<p class="sub">Creates a single-use link that works for 48 hours.</p>
+<button id="invite" type="button">Create invite link</button>
+<input id="link" type="text" readonly hidden style="margin-top:10px">
+<h2>Admins</h2>
+<div id="users"></div>
+</div>
+<button id="logout" class="alt" type="button" style="margin-top:20px">Sign out</button>
 </div>
 <p id="msg"></p>
 </main>

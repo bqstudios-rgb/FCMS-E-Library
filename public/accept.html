@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Accept invitation | FCMS Library</title>
+<style>
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:#fff;color:#1F2937;padding:24px 16px}
+main{max-width:380px;margin:40px auto}
+h1{color:#002F68;font-size:22px}
+.sub{color:#6B7280;font-size:14px;margin:4px 0 20px}
+label{display:block;font-size:14px;font-weight:500;color:#002F68;margin-bottom:4px}
+input{width:100%;padding:10px;border:1px solid #E5E7EB;border-radius:8px;font-size:16px;margin-bottom:14px}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#04CEFF;color:#002F68;font-weight:600;font-size:15px;cursor:pointer}
+#msg{font-size:14px;margin-top:12px;color:#D61F1F}
+.cf-turnstile{margin-bottom:14px}
+</style>
+</head>
+<body>
+<main>
+<h1>FCMS Library</h1>
+<p class="sub">Create your admin account. Use a password of at least 12 characters.</p>
+<form id="f">
+<label for="email">Email</label>
+<input id="email" type="email" autocomplete="username" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="new-password" minlength="12" required>
+<div class="cf-turnstile" data-sitekey="0x4AAAAAAFmTpXkVyoEUblnG"></div>
+<button type="submit">Create account</button>
+</form>
+<p id="msg"></p>
+</main>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="/accept.js"></script>
+</body>
+</html>
