@@ -1,0 +1,26 @@
+:root{--primary:#002F68;--secondary:#04CEFF;--bg:#FFFFFF;--text-main:#1F2937;--text-muted:#6B7280;--bg-tint-blue:#EEF4FC;--bg-tint-cyan:#E6F9FF;--bg-tint-red:#FDE8E8;--bg-tint-green:#E5F2E0;--border:#E5E7EB;--icon-pdf:#D61F1F;--icon-excel:#3F8A2A;--icon-word:#3763D6}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:var(--bg);color:var(--text-main);line-height:1.5;overflow-x:hidden}
+a{color:var(--primary);text-decoration:none}
+button{cursor:pointer;border:none;font-weight:500;font-size:14px;border-radius:8px;padding:10px 16px;transition:opacity .2s}
+button:hover{opacity:.9}
+.btn-primary{background:var(--secondary);color:var(--primary);font-weight:600}
+.btn-secondary{background:var(--bg-tint-blue);color:var(--primary);display:inline-flex;align-items:center;gap:6px}
+.container{max-width:1100px;margin:0 auto;padding:0 16px}
+.section-title{font-size:20px;color:var(--primary);margin-bottom:16px;font-weight:600}
+input{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:6px 12px;background:var(--bg-tint-blue);color:var(--primary);border-radius:16px;font-size:14px;white-space:nowrap}
+.tab.active{background:var(--primary);color:#fff}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+@media(min-width:768px){.grid-2{grid-template-columns:repeat(4,1fr)}}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;display:block;color:inherit}
+.state{padding:40px 0;text-align:center;color:var(--text-muted)}
+.state svg{margin:0 auto 8px;display:block}
+.state.err{color:var(--icon-pdf)}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.row-link{display:flex;align-items:center;padding:16px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;gap:8px}
+.row-link h4{font-size:14px;color:var(--primary)}
+.row-link p{font-size:12px;color:var(--text-muted);margin-top:4px}
