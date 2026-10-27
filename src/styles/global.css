@@ -63,3 +63,13 @@
 .feedback .anon input{width:auto;margin:0}
 .fb-ok{text-align:center;color:#166534;background:var(--bg-tint-green);border-radius:8px;padding:14px;font-size:14px}
 .fb-err{color:var(--icon-pdf);font-size:14px;margin-bottom:12px}
+.form-page{max-width:560px;padding-top:24px;padding-bottom:40px}
+.form-page label{display:block;font-size:14px;font-weight:500;color:var(--primary);margin-bottom:4px}
+.form-page select,.form-page textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;margin-bottom:16px;background:#fff}
+.form-page textarea{resize:vertical}
+.notice{background:var(--bg-tint-blue);padding:12px;border-radius:8px;font-size:14px;margin-bottom:16px;color:var(--primary)}
+.notice.ok{background:var(--bg-tint-green);color:#166534}
+.form-err{color:var(--icon-pdf);font-size:14px;margin-bottom:12px}
+.secret-row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px}
+.secret-label{font-size:12px;color:var(--text-muted)}
+.secret-value{font-family:monospace;font-size:20px;color:var(--primary)}

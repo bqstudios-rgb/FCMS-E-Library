@@ -23,6 +23,7 @@ export default function Layout() {
         <nav style={{ position: 'fixed', top: 60, left: 0, right: 0, background: '#fff', borderBottom: '1px solid var(--border)', padding: 16, zIndex: 99, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Link to="/library" onClick={close} style={link}>Library</Link>
           <Link to="/search" onClick={close} style={link}>Search</Link>
+          <Link to="/contribute" onClick={close} style={link}>Contribute</Link>
         </nav>
       )}
       <main style={{ flex: 1 }}><Outlet /></main>
