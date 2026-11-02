@@ -44,3 +44,113 @@ export default function Contribute() {
     }
     setBusy(false);
   };
+
+  const courses = [];
+  const walk = (n) => {
+    if (!n || typeof n !== 'object') return;
+    if (Array.isArray(n)) return n.forEach(walk);
+    if (n.id && n.code && !courses.some((c) => c.id === n.id)) courses.push(n);
+    Object.values(n).forEach(walk);
+  };
+  walk(data);
+  courses.sort((a, b) => String(a.code).localeCompare(String(b.code)));
+
+  if (done) return <SubmitSuccess done={done} />;
+  if (loading) return <LoadingState />;
+  if (loadError) return <div className="container"><ErrorState message="Could not load courses." /></div>;
+
+  return (
+    <div className="container form-page">
+      <SEO title="Contribute" />
+      <h1>Contribute a file</h1>
+      <p>Your file stays private until an admin approves it.</p>
+      <form onSubmit={submit}>
+        <label>Your name
+          <input value={f.name} onChange={set('name')} maxLength={80} required />
+        </label>
+        <label>Title
+          <input value={f.title} onChange={set('title')} maxLength={150} required />
+        </label>
+        <label>Course
+          <select value={f.course} onChange={set('course')} required>
+            <option value="">Choose a course</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.code} {c.title}</option>
+            ))}
+          </select>
+        </label>
+        <label>Material type
+          <select value={f.category} onChange={set('category')}>
+            {CATS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label>Description (optional)
+          <textarea value={f.description} onChange={set('description')} rows={3} maxLength={500} />
+        </label>
+        <label>File (6 MB limit)
+          <input type="file" accept={EXTS.map((x) => '.' + x).join(',')} onChange={(e) => setFile(e.target.files[0] || null)} />
+        </label>
+        <Turnstile key={wkey} onToken={setTok} />
+        {err && <div className="notice">{err}</div>}
+        <button type="submit" className="btn-primary" disabled={busy}>
+          {busy ? 'Uploading...' : 'Submit for review'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+  const courses = [];
+  const walk = (n) => {
+    if (!n || typeof n !== 'object') return;
+    if (Array.isArray(n)) return n.forEach(walk);
+    if (n.id && n.code && !courses.some((c) => c.id === n.id)) courses.push(n);
+    Object.values(n).forEach(walk);
+  };
+  walk(data);
+  courses.sort((a, b) => String(a.code).localeCompare(String(b.code)));
+
+  if (done) return <SubmitSuccess done={done} />;
+  if (loading) return <LoadingState />;
+  if (loadError) return <div className="container"><ErrorState message="Could not load courses." /></div>;
+
+  return (
+    <div className="container form-page">
+      <SEO title="Contribute" />
+      <h1>Contribute a file</h1>
+      <p>Your file stays private until an admin approves it.</p>
+      <form onSubmit={submit}>
+        <label>Your name
+          <input value={f.name} onChange={set('name')} maxLength={80} required />
+        </label>
+        <label>Title
+          <input value={f.title} onChange={set('title')} maxLength={150} required />
+        </label>
+        <label>Course
+          <select value={f.course} onChange={set('course')} required>
+            <option value="">Choose a course</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.code} {c.title}</option>
+            ))}
+          </select>
+        </label>
+        <label>Material type
+          <select value={f.category} onChange={set('category')}>
+            {CATS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label>Description (optional)
+          <textarea value={f.description} onChange={set('description')} rows={3} maxLength={500} />
+        </label>
+        <label>File (6 MB limit)
+          <input type="file" accept={EXTS.map((x) => '.' + x).join(',')} onChange={(e) => setFile(e.target.files[0] || null)} />
+        </label>
+        <Turnstile key={wkey} onToken={setTok} />
+        {err && <div className="notice">{err}</div>}
+        <button type="submit" className="btn-primary" disabled={busy}>
+          {busy ? 'Uploading...' : 'Submit for review'}
+        </button>
+      </form>
+    </div>
+  );
+}
