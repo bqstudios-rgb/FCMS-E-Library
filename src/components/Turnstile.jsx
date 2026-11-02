@@ -2,14 +2,16 @@ import { useEffect, useRef } from 'react';
 
 const SITE_KEY = '0x4AAAAAAFmTpXkVyoEUblnG';
 
-export default function Turnstile({ onToken }) {
+export default function Turnstile({ onToken, action }) {
   const box = useRef(null);
   useEffect(() => {
     let t;
     let id = null;
     const mount = () => {
       if (window.turnstile && box.current) {
-        id = window.turnstile.render(box.current, { sitekey: SITE_KEY, callback: onToken, 'expired-callback': () => onToken('') });
+        const opts = { sitekey: SITE_KEY, callback: onToken, 'expired-callback': () => onToken('') };
+        if (action) opts.action = action;
+        id = window.turnstile.render(box.current, opts);
       } else t = setTimeout(mount, 300);
     };
     mount();

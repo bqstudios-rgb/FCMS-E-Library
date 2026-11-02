@@ -90,7 +90,7 @@ export default function Contribute() {
         <label>File (6 MB limit)
           <input type="file" accept={EXTS.map((x) => '.' + x).join(',')} onChange={(e) => setFile(e.target.files[0] || null)} />
         </label>
-        <Turnstile key={wkey} onToken={setTok} />
+        <Turnstile key={wkey} action="contribute" onToken={setTok} />
         {err && <div className="notice">{err}</div>}
         <button type="submit" className="btn-primary" disabled={busy}>
           {busy ? 'Uploading...' : 'Submit for review'}

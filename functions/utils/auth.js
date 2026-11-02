@@ -47,13 +47,25 @@ export async function clearFailures(env, ip, action) {
   await env.DB.prepare("DELETE FROM rate_limits WHERE ip_address = ? AND action = ?").bind(ip, action).run();
 }
 
-export async function verifyTurnstile(env, token, ip) {
-  if (!token || !env.TURNSTILE_SECRET) return false;
+export async function verifyTurnstile(env, token, ip, action) {
+  if (!token || token.length > 2048 || !env.TURNSTILE_SECRET) return false;
+  const allowed = (env.TURNSTILE_HOSTNAMES || "fcms-e-library.pages.dev")
+    .split(",").map((h) => h.trim()).filter(Boolean);
   const body = new FormData();
   body.append("secret", env.TURNSTILE_SECRET);
   body.append("response", token);
   if (ip) body.append("remoteip", ip);
-  const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
-  const d = await r.json();
-  return d.success === true;
+  try {
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST", body, signal: AbortSignal.timeout(10000),
+    });
+    if (!r.ok) return false;
+    const d = await r.json();
+    if (d.success !== true) return false;
+    if (!allowed.includes(d.hostname)) return false;
+    if (action && d.action !== action) return false;
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

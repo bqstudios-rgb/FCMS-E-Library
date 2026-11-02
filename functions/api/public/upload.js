@@ -14,7 +14,7 @@ export async function onRequestPost({ request, env }) {
   if (!(await hit(env, ip, "upload", 6, 3600))) return json({ error: "Too many uploads. Please try again later." }, 429);
   let form;
   try { form = await request.formData(); } catch { return json({ error: "Bad request" }, 400); }
-  if (!(await verifyTurnstile(env, String(form.get("turnstile") || ""), ip))) return json({ error: "Verification failed. Please try again." }, 400);
+  if (!(await verifyTurnstile(env, String(form.get("turnstile") || ""), ip, "contribute"))) return json({ error: "Verification failed. Please try again." }, 400);
 
   const name = String(form.get("name") || "").trim();
   const title = String(form.get("title") || "").trim();
