@@ -6,12 +6,13 @@ const dOn = (e) =>
      e.AWS_ACCESS_KEY_ID && e.AWS_SECRET_ACCESS_KEY);
 
 export function storageReady(env) {
-  return dOn(env) && A.storageReady(env);
+  return dOn(env);
 }
 
 // Returns the prefixed key. Store THIS value in the database.
 export async function putFile(env, key, bytes, mime, levelId) {
-  if (levelId === "lvl_100" || levelId === "lvl_200") {
+  const low = levelId === "lvl_100" || levelId === "lvl_200";
+  if (low || !A.storageReady(env)) {
     const r = await s3(env, "PUT", key, bytes, mime);
     if (!r.ok) throw new Error("dbrij put failed " + r.status);
     return "d:" + key;
