@@ -28,7 +28,7 @@ export async function onRequestPost({ request, env }) {
   if (!CATS.includes(category)) return json({ error: "Please choose a material type." }, 400);
   if (!file || typeof file === "string" || !file.size) return json({ error: "Please choose a file." }, 400);
   if (file.size > MAX) return json({ error: "File is too large. The limit is 6 MB." }, 413);
-  const course = await env.DB.prepare("SELECT id FROM courses WHERE id = ? AND is_approved = 1").bind(courseId).first();
+  const course = await env.DB.prepare("SELECT id, level_id FROM courses WHERE id = ? AND is_approved = 1").bind(courseId).first();
   if (!course) return json({ error: "Please choose a valid course." }, 400);
 
   const ext = (String(file.name).split(".").pop() || "").toLowerCase();
@@ -42,17 +42,18 @@ export async function onRequestPost({ request, env }) {
 
   const id = crypto.randomUUID();
   const key = "sub/" + id;
-  try { await putFile(env, key, buf); }
+  let stored;
+  try { stored = await putFile(env, key, buf, MIME[ext], course.level_id); }
   catch (e) { return json({ error: "Could not store your file. Please try again." }, 500); }
   const secret = newSecret();
   for (let i = 0; i < 5; i++) {
     const ticket = newTicket();
     try {
       await env.DB.prepare("INSERT INTO submissions (id, ticket_number, secret_hash, contributor_name, course_id, title, type, description, original_filename, mime_type, size_bytes, file_hash, duplicate_warning, possible_duplicate_of, status, r2_original_key, category) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)")
-        .bind(id, ticket, await sha256Hex(ticket + ":" + secret), name, courseId, title, ext, description || null, cleanName(file.name), MIME[ext], buf.byteLength, hash, sim ? 1 : 0, sim ? sim.id : null, key, category).run();
+        .bind(id, ticket, await sha256Hex(ticket + ":" + secret), name, courseId, title, ext, description || null, cleanName(file.name), MIME[ext], buf.byteLength, hash, sim ? 1 : 0, sim ? sim.id : null, stored, category).run();
       return json({ ok: true, ticket, secret, needsCompression: buf.byteLength > STANDARD }, 201);
     } catch (e) { /* retry with a new ticket */ }
   }
-  try { await deleteFile(env, key); } catch (e) {}
+  try { await deleteFile(env, stored); } catch (e) {}
   return json({ error: "Could not save your file. Please try again." }, 500);
 }
