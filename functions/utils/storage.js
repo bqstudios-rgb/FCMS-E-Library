@@ -1,38 +1,40 @@
-import * as A from "./appwrite.js";
-import { s3 } from "./s3.js";
-
-const dOn = (e) =>
-  !!(e.AWS_ENDPOINT_URL_S3 && e.DBRIJ_BUCKET &&
-     e.AWS_ACCESS_KEY_ID && e.AWS_SECRET_ACCESS_KEY);
+import { s3 } from './s3.js';
+import { appwrite } from './appwrite.js';
 
 export function storageReady(env) {
-  return dOn(env);
+  const dbrij = env.AWS_ACCESS_KEY_ID && env.AWS_SECRET_ACCESS_KEY && env.AWS_ENDPOINT_URL_S3 && env.AWS_REGION && env.DBRIJ_BUCKET;
+  const aw = env.APPWRITE_ENDPOINT && env.APPWRITE_PROJECT && env.APPWRITE_BUCKET && env.APPWRITE_KEY;
+  return Boolean(dbrij && aw);
 }
 
-// Returns the prefixed key. Store THIS value in the database.
 export async function putFile(env, key, bytes, mime, levelId) {
-  const low = levelId === "lvl_100" || levelId === "lvl_200";
-  if (low || !A.storageReady(env)) {
-    const r = await s3(env, "PUT", key, bytes, mime);
-    if (!r.ok) throw new Error("dbrij put failed " + r.status);
-    return "d:" + key;
+  if (levelId === 'lvl_100' || levelId === 'lvl_200') {
+    await s3(env, 'PUT', key, bytes, mime);
+    return 'd:' + key;
   }
-  await A.putFile(env, key, bytes, mime);
-  return "a:" + key;
+  if (levelId === 'lvl_300' || levelId === 'lvl_400') {
+    await appwrite(env, 'putFile', key, bytes, mime);
+    return 'a:' + key;
+  }
+  throw new Error("Invalid level ID");
 }
 
-export async function getFile(env, stored) {
-  if (stored.startsWith("d:")) {
-    const r = await s3(env, "GET", stored.slice(2));
-    return r.ok ? r : null;
+export async function getFile(env, storedKey) {
+  if (storedKey.startsWith('d:')) {
+    return s3(env, 'GET', storedKey.slice(2));
   }
-  return A.getFile(env, stored.replace(/^a:/, ""));
+  if (storedKey.startsWith('a:')) {
+    return appwrite(env, 'getFile', storedKey.slice(2));
+  }
+  throw new Error("Unknown storage prefix");
 }
 
-export async function deleteFile(env, stored) {
-  if (stored.startsWith("d:")) {
-    const r = await s3(env, "DELETE", stored.slice(2));
-    return r.ok || r.status === 404;
+export async function deleteFile(env, storedKey) {
+  if (storedKey.startsWith('d:')) {
+    return s3(env, 'DELETE', storedKey.slice(2));
   }
-  return A.deleteFile(env, stored.replace(/^a:/, ""));
+  if (storedKey.startsWith('a:')) {
+    return appwrite(env, 'deleteFile', storedKey.slice(2));
+  }
+  throw new Error("Unknown storage prefix");
 }
