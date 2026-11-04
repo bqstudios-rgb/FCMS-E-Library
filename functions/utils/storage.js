@@ -11,20 +11,23 @@ export function storageReady(env) {
 }
 
 export async function putFile(env, key, bytes, mime, levelId) {
-  await s3(env, 'PUT', key, bytes, mime);
+  const r = await s3(env, 'PUT', key, bytes, mime);
+  if (!r.ok) throw new Error('storage put failed ' + r.status);
   return 'd:' + key;
 }
 
 export async function getFile(env, storedKey) {
   if (storedKey.startsWith('d:')) {
-    return s3(env, 'GET', storedKey.slice(2));
+    const r = await s3(env, 'GET', storedKey.slice(2));
+    return r.ok ? r : null;
   }
-  throw new Error("Unknown storage prefix");
+  throw new Error('Unknown storage prefix');
 }
 
 export async function deleteFile(env, storedKey) {
   if (storedKey.startsWith('d:')) {
-    return s3(env, 'DELETE', storedKey.slice(2));
+    const r = await s3(env, 'DELETE', storedKey.slice(2));
+    return r.ok || r.status === 404;
   }
-  throw new Error("Unknown storage prefix");
+  throw new Error('Unknown storage prefix');
 }
