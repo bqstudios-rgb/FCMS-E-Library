@@ -20,7 +20,7 @@ export async function getAdmin({ request, env }) {
   const token = getCookie(request, "fcms_session");
   if (!token) return null;
   const row = await env.DB.prepare(
-    "SELECT a.id, a.email, a.role FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id = ? AND s.expires_at > ?"
+    "SELECT a.id, a.email, a.role, a.name FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id = ? AND s.expires_at > ?"
   ).bind(await sha256Hex(token), new Date().toISOString()).first();
   return row || null;
 }

@@ -39,7 +39,7 @@ async function showState() {
   $("login").hidden = r.ok;
   $("panel").hidden = !r.ok;
   if (r.ok) {
-    $("who").textContent = r.data.email + " (" + r.data.role + ")";
+    $("who").textContent = (r.data.name ? r.data.name + " · " : "") + r.data.email + " · " + (r.data.role === "owner" ? "Owner" : "Admin");
     $("owner").hidden = r.data.role !== "owner";
     if (r.data.role === "owner") loadUsers();
   }
