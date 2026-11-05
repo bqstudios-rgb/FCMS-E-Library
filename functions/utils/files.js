@@ -28,13 +28,17 @@ export async function bufHash(buf) {
   return Array.from(new Uint8Array(d), (x) => x.toString(16).padStart(2, "0")).join("");
 }
 
-export function newTicket() {
-  return "MCL-" + String(10000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 90000));
-}
 
 export function newSecret() {
   const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let s = "";
   crypto.getRandomValues(new Uint8Array(8)).forEach((v, i) => { s += A[v % 32]; if (i === 3) s += "-"; });
   return s;
+}
+
+export function newTicket(name) {
+  let p = String(name || "").normalize("NFD").replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 3);
+  while (p.length < 3) p += "X";
+  const n = crypto.getRandomValues(new Uint32Array(1))[0] % 900000 + 100000;
+  return p + "-" + n;
 }

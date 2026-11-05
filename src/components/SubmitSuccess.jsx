@@ -9,7 +9,7 @@ export default function SubmitSuccess({ done }) {
     setTimeout(() => setCopied(''), 2000);
   };
   const save = () => {
-    const body = 'FCMS Library submission\nTicket number: ' + done.ticket + '\nSecret code: ' + done.secret + '\n';
+    const body = 'FCMS Library submission\nTicket number: ' + done.ticket + '\n';
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([body], { type: 'text/plain' }));
     a.download = 'fcms-ticket-' + done.ticket + '.txt';
@@ -28,7 +28,6 @@ export default function SubmitSuccess({ done }) {
     <div className="container form-page">
       <div className="notice ok"><strong>Submitted for review.</strong> Save these now. You need both to check your status, and we cannot recover them.</div>
       {row('Ticket number', done.ticket)}
-      {row('Secret code', done.secret)}
       {done.needsCompression && <div className="notice">Your file is over 3 MB, so an admin will compress it before it can be published. This may take a little longer.</div>}
       <button type="button" className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }} onClick={save}><Download size={16} />Download as text file</button>
     </div>

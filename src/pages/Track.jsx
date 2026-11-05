@@ -10,7 +10,6 @@ const input = { width: '100%', padding: '12px 16px', border: '1px solid #E5E7EB'
 
 export default function Track() {
   const [ticket, setTicket] = useState('');
-  const [secret, setSecret] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [res, setRes] = useState(null);
@@ -21,7 +20,7 @@ export default function Track() {
     try {
       const r = await fetch('/api/public/track', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ticket, secret }),
+        body: JSON.stringify({ ticket }),
       });
       const d = await r.json();
       if (!r.ok) setErr(d.error || 'Something went wrong.'); else setRes(d);
@@ -33,10 +32,9 @@ export default function Track() {
   return (
     <div className="container" style={{ maxWidth: 480, margin: '0 auto', padding: '32px 16px' }}>
       <h1 style={{ color: '#002F68', fontSize: 26, marginBottom: 8 }}>Track your upload</h1>
-      <p style={{ color: '#6B7280', marginBottom: 20 }}>Enter the ticket number and secret code you received after uploading.</p>
+      <p style={{ color: '#6B7280', marginBottom: 20 }}>Enter the ticket number you received after uploading.</p>
       <form onSubmit={go}>
-        <input style={input} placeholder="Ticket (MCL-12345)" value={ticket} onChange={(e) => setTicket(e.target.value)} autoCapitalize="characters" required />
-        <input style={input} placeholder="Secret code (ABCD-2EFG)" value={secret} onChange={(e) => setSecret(e.target.value)} autoCapitalize="characters" required />
+        <input style={input} placeholder="Ticket (DUK-482916)" value={ticket} onChange={(e) => setTicket(e.target.value)} autoCapitalize="characters" required />
         <button type="submit" disabled={busy} style={{ width: '100%', padding: '12px 16px', border: 0, borderRadius: 999, background: '#002F68', color: '#fff', fontSize: 16, cursor: 'pointer' }}>
           {busy ? 'Checking...' : 'Check status'}
         </button>

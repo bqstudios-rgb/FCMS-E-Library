@@ -45,9 +45,9 @@ export async function onRequestPost({ request, env }) {
   let stored;
   try { stored = await putFile(env, key, buf, MIME[ext], course.level_id); }
   catch (e) { return json({ error: "Could not store your file. Please try again." }, 500); }
-  const secret = newSecret();
+  const secret = "";
   for (let i = 0; i < 5; i++) {
-    const ticket = newTicket();
+    const ticket = newTicket(name);
     try {
       await env.DB.prepare("INSERT INTO submissions (id, ticket_number, secret_hash, contributor_name, course_id, title, type, description, original_filename, mime_type, size_bytes, file_hash, duplicate_warning, possible_duplicate_of, status, r2_original_key, category) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)")
         .bind(id, ticket, await sha256Hex(ticket + ":" + secret), name, courseId, title, ext, description || null, cleanName(file.name), MIME[ext], buf.byteLength, hash, sim ? 1 : 0, sim ? sim.id : null, stored, category).run();

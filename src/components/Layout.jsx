@@ -24,6 +24,7 @@ export default function Layout() {
           <Link to="/library" onClick={close} style={link}>Library</Link>
           <Link to="/search" onClick={close} style={link}>Search</Link>
           <Link to="/contribute" onClick={close} style={link}>Contribute</Link>
+          <Link to="/track" onClick={close} style={link}>Track</Link>
         </nav>
       )}
       <main style={{ flex: 1 }}><Outlet /></main>
