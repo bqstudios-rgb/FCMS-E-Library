@@ -8,11 +8,25 @@
 <style>
 *{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,sans-serif}
 [hidden]{display:none!important}
-body{background:#fff;color:#1F2937;padding:24px 16px}
-main{max-width:420px;margin:30px auto}
+body{background:#fff;color:#1F2937;padding:0;overflow-x:hidden;}
+/* Top Nav */
+header{background:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E5E7EB;}
+.nav-title{color:#002F68;font-size:20px;font-weight:bold;}
+.menu-btn{background:none;border:none;font-size:24px;color:#002F68;cursor:pointer;padding:0;width:auto;}
+/* Side Menu */
+#side-menu{position:fixed;top:0;right:-320px;width:280px;height:100vh;background:#fff;box-shadow:-2px 0 8px rgba(0,0,0,0.1);transition:right 0.3s ease;padding:24px;z-index:100;overflow-y:auto;}
+#side-menu.open{right:0;}
+.close-btn{background:none;border:none;font-size:24px;color:#6B7280;cursor:pointer;margin-bottom:20px;text-align:right;width:100%;}
+/* Main Content */
+main{max-width:420px;margin:20px auto;padding:0 16px}
 h1{color:#002F68;font-size:22px}
 h2{color:#002F68;font-size:16px;margin:24px 0 8px}
 .sub{color:#6B7280;font-size:14px;margin:4px 0 16px}
+/* Profile */
+.profile-wrap{display:flex;align-items:center;gap:12px;margin-bottom:24px;background:#EEF4FC;padding:16px;border-radius:8px;}
+.profile-icon{width:40px;height:40px;background:#002F68;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#who{font-weight:500;font-size:14px;line-height:1.5;}
+/* Forms & Buttons */
 label{display:block;font-size:14px;font-weight:500;color:#002F68;margin-bottom:4px}
 input{width:100%;padding:10px;border:1px solid #E5E7EB;border-radius:8px;font-size:16px;margin-bottom:14px}
 button{width:100%;padding:12px;border:none;border-radius:8px;background:#04CEFF;color:#002F68;font-weight:600;font-size:15px;cursor:pointer}
@@ -25,39 +39,75 @@ button.small{width:auto;padding:6px 12px;font-size:13px;background:#FDE8E8;color
 </style>
 </head>
 <body>
+
+<header id="top-header" hidden>
+  <div class="nav-title">FCMS Library</div>
+  <button class="menu-btn" onclick="document.getElementById('side-menu').classList.add('open')">☰</button>
+</header>
+
+<div id="side-menu">
+  <button class="close-btn" onclick="document.getElementById('side-menu').classList.remove('open')">✕</button>
+  <div id="owner" hidden>
+    <h2>Invite an admin</h2>
+    <p class="sub">Creates a single-use link that works for 48 hours.</p>
+    <button id="invite" type="button">Create invite link</button>
+    <input id="link" type="text" readonly hidden style="margin-top:10px">
+    <h2>Admins</h2>
+    <div id="users"></div>
+  </div>
+  <button id="logout" class="alt" type="button" style="margin-top:30px">Sign out</button>
+</div>
+
 <main>
-<h1>FCMS Library</h1>
-<form id="login">
-<p class="sub">Admin sign in</p>
-<label for="email">Email</label>
-<input id="email" type="email" autocomplete="username" required>
-<label for="password">Password</label>
-<input id="password" type="password" autocomplete="current-password" required>
-<div class="cf-turnstile" data-sitekey="0x4AAAAAAFmTpXkVyoEUblnG"></div>
-<button type="submit">Sign in</button>
-</form>
-<div id="panel" hidden>
-<p class="sub">Signed in as</p>
-<p id="who" style="margin-bottom:12px;font-weight:600"></p>
-<div id="owner" hidden>
-<h2>Invite an admin</h2>
-<p class="sub">Creates a single-use link that works for 48 hours.</p>
-<button id="invite" type="button">Create invite link</button>
-<input id="link" type="text" readonly hidden style="margin-top:10px">
-<h2>Admins</h2>
-<div id="users"></div>
-</div>
-<div id="stats"></div>
-<h2>Pending review</h2><div id="queue"></div>
-<button id="logout" class="alt" type="button" style="margin-top:20px">Sign out</button>
-</div>
-<p id="msg"></p>
+  <h1 id="login-title">FCMS Library</h1>
+  <form id="login">
+    <p class="sub">Admin sign in</p>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" required>
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAFmTpXkVyoEUblnG"></div>
+    <button type="submit">Sign in</button>
+  </form>
+
+  <div id="panel" hidden>
+    <div class="profile-wrap">
+      <div class="profile-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div id="who"></div>
+    </div>
+    
+    <div id="stats"></div>
+    
+    <h2>Pending review</h2>
+    <div id="queue"></div>
+    
+    <div style="margin-top: 24px;">
+      <a href="/queue.html" style="display:block; text-align:center; background: #002F68; color: #FFF; padding: 12px; border-radius: 9999px; text-decoration: none; font-weight: 600;">Open Review Queue</a>
+    </div>
+  </div>
+  
+  <p id="msg"></p>
 </main>
+
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="/review.js" defer></script>
 <script src="/compress.js" defer></script>
 <script src="/stats.js" defer></script>
 <script src="/admin.js"></script>
-    <div style="padding: 20px; text-align: center;"><a href="/queue.html" style="background: #002F68; color: #FFF; padding: 10px 20px; border-radius: 9999px; text-decoration: none; font-weight: bold;">Open Review Queue</a></div>
+<script>
+  // Hide main title and show nav only when panel is visible
+  const observer = new MutationObserver(() => {
+    if (!document.getElementById('panel').hasAttribute('hidden')) {
+      document.getElementById('top-header').removeAttribute('hidden');
+      document.getElementById('login-title').setAttribute('hidden', '');
+    } else {
+      document.getElementById('top-header').setAttribute('hidden', '');
+      document.getElementById('login-title').removeAttribute('hidden');
+    }
+  });
+  observer.observe(document.getElementById('panel'), { attributes: true });
+</script>
 </body>
 </html>
