@@ -16,7 +16,7 @@ async function loadUsers() {
     const row = document.createElement("div");
     row.className = "row";
     const label = document.createElement("span");
-    label.textContent = u.email + " (" + u.role + ")";
+    label.textContent = (u.name ? u.name + " · " : "") + u.email + " (" + u.role + ")";
     row.appendChild(label);
     if (u.role !== "owner") {
       const b = document.createElement("button");

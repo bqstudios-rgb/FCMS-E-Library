@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Feedback from '../components/Feedback';
+import { useFetch } from '../hooks/useFetch';
+import MaterialCard from '../components/MaterialCard';
 
 const hide = (e) => { e.currentTarget.style.display = 'none'; };
 
@@ -12,6 +14,8 @@ const FEATURES = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const home = useFetch('/api/public/home');
+  const top = (home.data ? home.data.topRead : null) || [];
   return (
     <>
       <SEO title="Home" description="FCMS Library: all your PDFs, class materials and past questions in one digital library." />
@@ -32,6 +36,7 @@ export default function Home() {
             </div>
           ))}
         </div>
+        {top.length ? (<section style={{ margin: "24px 0" }}><h3 style={{ color: "#002F68", marginBottom: 12 }}>Top Read</h3>{top.map((m) => <MaterialCard key={m.id} material={m} />)}</section>) : null}
         <Feedback />
       </div>
     </>
