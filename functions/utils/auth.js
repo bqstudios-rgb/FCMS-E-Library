@@ -48,7 +48,6 @@ export async function clearFailures(env, ip, action) {
 }
 
 export async function verifyTurnstile(env, token, ip, action) {
-  if (env.TURNSTILE_DISABLED === "1") return true;
   if (!token || token.length > 2048 || !env.TURNSTILE_SECRET) return false;
   const allowed = (env.TURNSTILE_HOSTNAMES || "fcms-e-library.pages.dev")
     .split(",").map((h) => h.trim()).filter(Boolean);
