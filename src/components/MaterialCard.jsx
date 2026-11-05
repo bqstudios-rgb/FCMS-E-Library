@@ -1,4 +1,4 @@
-import { FileText, FileSpreadsheet, Presentation, File } from 'lucide-react';
+import { FileText, FileSpreadsheet, Presentation, File, Download } from 'lucide-react';
 
 const KINDS = {
   pdf: [FileText, 'pdf'],
@@ -23,6 +23,7 @@ export default function MaterialCard({ material, hideCourse }) {
         <h4>{material.title}</h4>
         <p>{meta}</p>
       </div>
+      <a className="btn-secondary" href={"/api/public/materials/" + material.id + "/download"} download aria-label={"Download " + material.title} title="Download" style={{ flexShrink: 0, padding: "10px 12px", borderRadius: 999 }}><Download size={18} /></a>
     </div>
   );
 }
