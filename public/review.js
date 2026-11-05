@@ -23,6 +23,7 @@
     if (it.description) c.append(el("p", it.description, "font-size:14px;margin-top:4px"));
     if (it.duplicate_warning) c.append(el("p", "Possible duplicate: similar title or size already in this course.", "background:#FDE8E8;color:#D61F1F;border-radius:10px;padding:6px 10px;font-size:14px;margin-top:8px"));
     if (it.size_bytes > 3145728) c.append(el("p", "Over 3 MB: must be compressed before approval.", "background:#EEF4FC;color:#002F68;border-radius:10px;padding:6px 10px;font-size:14px;margin-top:8px"));
+    if (it.size_bytes > 3145728 && window.compressUI) window.compressUI(c, it, load);
     const msg = el("p", "", "color:#D61F1F;font-size:14px;margin-top:8px");
     const row = el("div", "", "display:flex;gap:8px;flex-wrap:wrap;margin-top:12px");
     const view = el("a", "Open file", "padding:10px 16px;border:1px solid #002F68;border-radius:999px;color:#002F68;text-decoration:none;font-size:15px");

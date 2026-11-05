@@ -13,7 +13,7 @@ export async function onRequestPost(ctx) {
   try {
     await env.DB.batch([
       env.DB.prepare("INSERT INTO materials (id, submission_id, course_id, contributor_name, title, type, size_bytes, r2_object_key, category) VALUES (?,?,?,?,?,?,?,?,?)")
-        .bind(mid, s.id, s.course_id, s.contributor_name, s.title, s.type, s.size_bytes, s.r2_compressed_key || s.r2_original_key, s.category || "Notes"),
+        .bind(mid, s.id, s.course_id, s.contributor_name, s.title, s.type, s.r2_compressed_key ? (s.compressed_size_bytes || s.size_bytes) : s.size_bytes, s.r2_compressed_key || s.r2_original_key, s.category || "Notes"),
       env.DB.prepare("UPDATE submissions SET status = 'approved' WHERE id = ? AND status = 'pending'").bind(s.id),
       env.DB.prepare("INSERT INTO search_index (title, course_code, course_title, contributor_name, material_id) VALUES (?,?,?,?,?)")
         .bind(s.title, s.ccode, s.ctitle, s.contributor_name, mid),
