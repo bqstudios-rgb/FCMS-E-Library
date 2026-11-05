@@ -6,6 +6,7 @@ import Browse from './pages/Browse';
 import CourseDetail from './pages/CourseDetail';
 import Search from './pages/Search';
 import Contribute from './pages/Contribute';
+import Track from './pages/Track';
 import { ErrorState } from './components/States';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="course/:id" element={<CourseDetail />} />
           <Route path="search" element={<Search />} />
           <Route path="contribute" element={<Contribute />} />
+          <Route path="track" element={<Track />} />
           <Route path="*" element={<div className="container"><ErrorState message="Page not found." /></div>} />
         </Route>
       </Routes>
