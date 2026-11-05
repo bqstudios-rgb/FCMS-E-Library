@@ -12,7 +12,6 @@ export async function onRequestPost({ request, env }) {
   const email = String(body.email || "").trim().toLowerCase();
   const password = String(body.password || "");
   const name = String(body.name || "").trim();
-  const name = String(body.name || "").trim();
   const token = String(body.token || "");
   if (!(await verifyTurnstile(env, body.turnstile, ip))) return json({ error: "Verification failed. Please try again." }, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "Invalid email" }, 400);
