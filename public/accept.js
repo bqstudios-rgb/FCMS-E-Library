@@ -8,7 +8,7 @@ document.getElementById("f").addEventListener("submit", async (e) => {
   const r = await fetch("/api/admin/invitations/accept", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token, email: document.getElementById("email").value, password: document.getElementById("password").value, turnstile: t }),
+    body: JSON.stringify({ token, name: document.getElementById("name").value, email: document.getElementById("email").value, password: document.getElementById("password").value, turnstile: t }),
   });
   let d = {};
   try { d = await r.json(); } catch (x) {}

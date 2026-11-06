@@ -16,8 +16,6 @@ export async function onRequestPost({ request, env }) {
   if (!(await verifyTurnstile(env, body.turnstile, ip))) return json({ error: "Verification failed. Please try again." }, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "Invalid email" }, 400);
   if (name.length < 2 || name.length > 60) return json({ error: "Enter your name (2 to 60 characters)" }, 400);
-  if (name.length < 2 || name.length > 60) return json({ error: "Enter your name (2 to 60 characters)" }, 400);
-  if (password.length < 12) return json({ error: "Password must be at least 12 characters" }, 400);
 
   const now = new Date().toISOString();
   const inv = await env.DB.prepare("SELECT id FROM invitations WHERE token_hash = ? AND used_at IS NULL AND expires_at > ?")

@@ -1,3 +1,4 @@
+import { addEgress } from "../../../../utils/egress.js";
 import { json } from "../../../../utils/auth.js";
 import { hit } from "../../../../utils/limit.js";
 import { MIME } from "../../../../utils/files.js";
@@ -18,6 +19,7 @@ export async function onRequestGet({ request, env, params }) {
     await env.DB.prepare("INSERT INTO download_counts (id, material_id, date, count) VALUES (?, ?, ?, 1) ON CONFLICT(material_id, date) DO UPDATE SET count = count + 1")
       .bind(crypto.randomUUID(), m.id, day).run();
   } catch (e) {}
+  await addEgress(env, Number(r.headers.get("content-length")) || 0);
   const h = {
     "Content-Type": MIME[ext] || "application/octet-stream",
     "Content-Disposition": 'attachment; filename="' + base + "." + ext + '"',
