@@ -1,0 +1,33 @@
+:root{--primary:#002F68;--secondary:#04CEFF;--text-muted:#6B7280;--bg-tint-blue:#EEF4FC;--bg-tint-cyan:#E6F9FF;--bg-tint-red:#FDE8E8;--bg-tint-green:#E5F2E0;--border:#E5E7EB;--icon-pdf:#D61F1F;--icon-excel:#3F8A2A;--icon-word:#3763D6}
+header#top-header{padding:14px 5%}
+.nav-title{font-size:20px;font-weight:600}
+main{max-width:1100px;margin:0 auto 40px;padding:0 16px}
+#login{max-width:420px;margin:0 auto}
+#login button{border-radius:9999px}
+#invite{border-radius:9999px}
+h2{font-size:20px;font-weight:600;margin:28px 0 12px}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(min-width:768px){.grid-2{grid-template-columns:repeat(4,1fr)}}
+.level-card{text-align:center}
+.level-card h3{font-size:28px;color:var(--primary);font-weight:700}
+.level-card p{font-size:14px;color:var(--text-muted)}
+#w-banner{position:relative;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;min-height:150px;padding:28px 5% 22px;margin-bottom:24px;border-radius:0 0 24px 24px;background:linear-gradient(180deg,#0B4A98 0%,#002F68 100%)}
+#w-banner h2{font-size:28px;font-weight:700;color:#fff;margin:0}
+#w-banner p{font-size:15px;opacity:.92;margin:6px 0 0}
+.file-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.file-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon-pdf{background:var(--bg-tint-red);color:var(--icon-pdf)}
+.icon-word{background:var(--bg-tint-blue);color:var(--icon-word)}
+.icon-excel{background:var(--bg-tint-green);color:var(--icon-excel)}
+#m-scr .m-card{border-radius:12px}
+#m-scr .m-top{padding:16px;font-size:18px}
+#m-scr .m-top strong{font-weight:600}
+#m-scr .m-pill{background:var(--secondary);color:var(--primary);font-weight:600}
+#side-menu{width:310px;border-radius:20px 0 0 20px}
+#side-menu>div:nth-child(2){background:var(--primary);border-radius:16px;padding:20px 12px}
+#side-menu .profile-icon-large{background:var(--secondary);color:var(--primary)}
+#menu-name{color:#fff!important}
+#menu-email{color:#cfe0f5!important}
+#menu-role{background:var(--secondary)!important;color:var(--primary)!important}
+#side-menu .m-item{font-size:15px}
