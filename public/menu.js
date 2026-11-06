@@ -222,22 +222,61 @@ function mFeed() {
     load();
   });
 }
-const mItems = [
-  ["queue", "Review queue", () => { location.href = "/queue.html"; }],
-  ["files", "Materials", mMaterials],
-  ["disk", "Storage and egress", mMeters],
-  ["history", "Activity log (everyone)", () => mLog(false)],
-  ["user", "My actions", () => mLog(true)],
-  ["chat", "Feedback inbox", mFeed]
+mP.down = '<path d="m6 9 6 6 6-6"/>';
+const mGroups = [
+  ["files", "Library", [
+    ["queue", "Review queue", () => { location.href = "/queue.html"; }],
+    ["files", "Materials", mMaterials],
+    ["chat", "Feedback inbox", mFeed]]],
+  ["history", "Records", [
+    ["disk", "Storage and egress", mMeters],
+    ["history", "Activity log", () => mLog(false)],
+    ["user", "My actions", () => mLog(true)]]]
 ];
+const mCss2 = document.createElement("style");
+mCss2.textContent = `
+.m-sub{display:none;padding-left:14px;margin-left:10px;border-left:2px solid #EEF4FC}
+.m-grp.open .m-sub{display:block}
+.m-grp.open .m-chev{transform:rotate(180deg)}
+.m-chev{margin-left:auto;transition:transform .2s}
+.m-sub .m-item{font-weight:400;font-size:14px}
+`;
+document.head.append(mCss2);
 function mInit() {
   const sm = document.getElementById("side-menu");
   if (!sm) return;
-  const nav = mEl("div", { class: "m-nav" }, ...mItems.map((i) => mEl("button", { class: "m-item", onclick: i[2] }, mIcon(i[0], 20), mEl("span", { text: i[1] }))));
+  const nav = mEl("div", { class: "m-nav" }, ...mGroups.map((g) => {
+    const grp = mEl("div", { class: "m-grp" });
+    const head = mEl("button", { class: "m-item", onclick: () => grp.classList.toggle("open") },
+      mIcon(g[0], 20), mEl("span", { text: g[1] }), mEl("span", { class: "m-chev" }, mIcon("down", 18)));
+    const sub = mEl("div", { class: "m-sub" }, ...g[2].map((i) =>
+      mEl("button", { class: "m-item", onclick: i[2] }, mIcon(i[0], 18), mEl("span", { text: i[1] }))));
+    grp.append(head, sub);
+    return grp;
+  }));
   const old = sm.querySelector(".menu-section");
   if (old && old.textContent.includes("Actions taken by me")) { sm.insertBefore(nav, old); old.remove(); }
   else sm.insertBefore(nav, sm.children[2] || null);
   const hp = document.querySelector(".header-profile");
-  if (hp) hp.append(mEl("span", { class: "m-burger", "aria-label": "Open menu" }, mIcon("menu", 24)));
+  if (hp && !hp.querySelector(".m-burger")) hp.append(mEl("span", { class: "m-burger", "aria-label": "Open menu" }, mIcon("menu", 24)));
+}
+let mDashBox;
+async function mDash() {
+  const st = document.getElementById("stats");
+  if (!st) return;
+  const r = await mApi("/api/admin/meters");
+  if (!r.ok) return;
+  const d = r.data;
+  if (!mDashBox) { mDashBox = mEl("div"); st.after(mDashBox); }
+  mDashBox.replaceChildren(
+    mBar("Storage", d.storage.bytes, d.storage.limit),
+    mBar("Egress this month", d.egress.month, d.egress.limit),
+    mEl("p", { class: "m-note", text: "Downloads in the last 30 days: " + (d.downloads ? d.downloads.last30 : 0) })
+  );
 }
 mInit();
+const mPanel = document.getElementById("panel");
+if (mPanel) {
+  new MutationObserver(() => { if (!mPanel.hidden) mDash(); }).observe(mPanel, { attributes: true });
+  if (!mPanel.hidden) mDash();
+}
