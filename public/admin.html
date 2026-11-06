@@ -133,35 +133,7 @@ button.small{width:auto;padding:6px 12px;font-size:13px;background:#FDE8E8;color
 <script src="/compress.js" defer></script>
 <script src="/stats.js" defer></script>
 <script src="/menu.js" defer></script>
+<script src="/shell.js" defer></script>
 <script src="/admin.js"></script>
-<script>
-  const panelObserver = new MutationObserver(() => {
-    if (!document.getElementById('panel').hasAttribute('hidden')) {
-      document.getElementById('top-header').removeAttribute('hidden');
-      document.getElementById('login-title').setAttribute('hidden', '');
-    } else {
-      document.getElementById('top-header').setAttribute('hidden', '');
-      document.getElementById('login-title').removeAttribute('hidden');
-    }
-  });
-  panelObserver.observe(document.getElementById('panel'), { attributes: true });
-
-  const whoObserver = new MutationObserver(() => {
-    const whoText = document.getElementById('who').textContent;
-    if(whoText) {
-      const parts = whoText.split('·').map(s => s.trim());
-      if(parts.length >= 3) {
-        document.getElementById('top-name').textContent = parts[0];
-        document.getElementById('top-role').textContent = parts[2];
-        document.getElementById('menu-name').textContent = parts[0];
-        document.getElementById('menu-email').textContent = parts[1];
-        document.getElementById('menu-role').textContent = parts[2];
-      } else {
-        document.getElementById('top-name').textContent = whoText;
-      }
-    }
-  });
-  whoObserver.observe(document.getElementById('who'), { childList: true, characterData: true, subtree: true });
-</script>
 </body>
 </html>
