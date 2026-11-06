@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suggest a course | FCMS Library</title><link rel="stylesheet" href="/legal.css"></head>
+<body data-nofoot>
+<div class="lh"><a href="/">FCMS Library</a><small>Communication and Media Studies</small></div>
+<div class="lw">
+<h1>Suggest a course</h1>
+<p class="up">Missing a course? Tell us and an admin will review it before it appears.</p>
+<form id="f" novalidate>
+<label for="cname">Course title</label>
+<input id="cname" type="text" maxlength="80" autocomplete="off">
+<label for="ccode">Course code (optional)</label>
+<input id="ccode" type="text" maxlength="12" placeholder="MCM 309" autocomplete="off">
+<label for="clevel">Level</label>
+<select id="clevel"><option value="100">100 level</option><option value="200">200 level</option><option value="300">300 level</option><option value="400">400 level</option></select>
+<div class="hp" aria-hidden="true"><label for="cweb">Website</label><input id="cweb" type="text" tabindex="-1" autocomplete="off"></div>
+<button class="go" type="submit">Send suggestion</button>
+<p id="msg" role="status"></p>
+</form>
+<div class="lnav"><a href="/">Home</a><a href="/privacy">Privacy</a></div>
+</div>
+<script src="/suggest.js" defer></script>
+<script src="/site.js" defer></script>
+</body></html>

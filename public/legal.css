@@ -1,0 +1,18 @@
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;color:#1F2937;line-height:1.6;background:#fff}
+.lh{background:#002F68;color:#fff;padding:16px 5%}
+.lh a{color:#fff;text-decoration:none;font-weight:600;font-size:18px}
+.lh small{display:block;opacity:.85;font-size:13px;font-weight:400}
+.lw{max-width:720px;margin:0 auto;padding:24px 16px 56px}
+h1{color:#002F68;font-size:26px;margin:0 0 4px}
+.up{color:#6B7280;font-size:14px;margin-bottom:20px}
+h2{color:#002F68;font-size:18px;margin:24px 0 8px}
+ul{padding-left:20px}
+li{margin-bottom:6px}
+a{color:#002F68}
+.lnav{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.lnav a{background:#EEF4FC;color:#002F68;padding:8px 14px;border-radius:9999px;text-decoration:none;font-size:14px}
+label{display:block;font-size:14px;font-weight:500;color:#002F68;margin-bottom:4px}
+input,select{width:100%;padding:12px;border:1px solid #E5E7EB;border-radius:8px;font-size:16px;margin-bottom:14px;background:#fff;box-sizing:border-box}
+button.go{background:#04CEFF;color:#002F68;font-weight:600;border:none;border-radius:9999px;padding:12px 22px;font-size:15px;cursor:pointer}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#msg{margin-top:12px;font-size:14px;color:#002F68}

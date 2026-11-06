@@ -10,7 +10,7 @@ export async function onRequestGet(ctx) {
   const db = ctx.env.DB;
   const month = new Date().toISOString().slice(0, 7) + "%";
   const [s, m, d, c] = await db.batch([
-    db.prepare("SELECT COUNT(*) AS files, COALESCE(SUM(size_bytes), 0) + COALESCE(SUM(compressed_size_bytes), 0) AS bytes FROM submissions"),
+    db.prepare("SELECT COUNT(*) AS files, COALESCE(SUM(CASE WHEN r2_original_key = COALESCE(r2_compressed_key, '') THEN 0 ELSE size_bytes END), 0) + COALESCE(SUM(compressed_size_bytes), 0) AS bytes FROM submissions"),
     db.prepare("SELECT COALESCE(SUM(bytes), 0) AS n FROM egress_log WHERE date LIKE ?").bind(month),
     db.prepare("SELECT COALESCE(SUM(bytes), 0) AS n FROM egress_log WHERE date >= date('now', '-30 day')"),
     db.prepare("SELECT COALESCE(SUM(count), 0) AS n FROM download_counts WHERE date >= date('now', '-30 day')"),

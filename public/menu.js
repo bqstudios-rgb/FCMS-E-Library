@@ -227,11 +227,13 @@ const mGroups = [
   ["files", "Library", [
     ["queue", "Review queue", () => { location.href = "/queue.html"; }],
     ["files", "Materials", mMaterials],
-    ["chat", "Feedback inbox", mFeed]]],
+    ["chat", "Feedback inbox", mFeed],
+    ["plus", "Suggestions", mSugg]]],
   ["history", "Records", [
     ["disk", "Storage and egress", mMeters],
     ["history", "Activity log", () => mLog(false)],
-    ["user", "My actions", () => mLog(true)]]]
+    ["user", "My actions", () => mLog(true)],
+    ["trash", "Clean up storage", mCleanup]]]
 ];
 const mCss2 = document.createElement("style");
 mCss2.textContent = `
