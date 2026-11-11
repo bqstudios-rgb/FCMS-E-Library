@@ -24,7 +24,7 @@
     var t = document.createElement("div");
     t.textContent = admin
       ? "This area uses one sign-in cookie so the site knows you are signed in. It is not used for tracking. "
-      : "No ads, no analytics and no tracking cookies. Cloudflare's security check may use a short-lived technical cookie on some forms. ";
+      : "No ads, no analytics and no tracking cookies. A security check on some forms may use a short-lived technical cookie. ";
     var a2 = document.createElement("a");
     a2.href = "/privacy"; a2.textContent = "Read the privacy policy";
     t.appendChild(a2);
