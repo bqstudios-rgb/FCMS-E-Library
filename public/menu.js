@@ -282,3 +282,73 @@ if (mPanel) {
   new MutationObserver(() => { if (!mPanel.hidden) mDash(); }).observe(mPanel, { attributes: true });
   if (!mPanel.hidden) mDash();
 }
+
+/* ---- Levels and courses ---- */
+mP.book = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>';
+mP.up = '<path d="m17 8-5-5-5 5"/><path d="M12 3v12"/><path d="M5 21h14"/>';
+function mAcademics() {
+  mOpen("Levels and courses", (b) => {
+    const list = mEl("div");
+    const msg = mEl("p", { class: "m-note" });
+    b.append(mEl("button", { class: "m-pill", onclick: async () => {
+      const n = prompt("New level (three digits, for example 500):");
+      if (!n) return;
+      const r = await mApi("/api/admin/academics", mJson("POST", { action: "add_level", name: n }));
+      if (!r.ok) msg.textContent = r.data.error || "Could not add level."; else { msg.textContent = ""; load(); }
+    } }, mIcon("plus", 16), " Add level"), msg, list);
+    const load = async () => {
+      const r = await mApi("/api/admin/academics");
+      list.replaceChildren();
+      if (!r.ok) { list.append(mEl("p", { class: "m-note", text: "Could not load levels." })); return; }
+      const sems = r.data.semesters;
+      r.data.levels.forEach((lv) => {
+        const cs = r.data.courses.filter((c) => c.level_id === lv.id);
+        const box = mEl("div", { class: "m-card" });
+        const head = mEl("div", { class: "m-row", style: "border:0;padding:0" },
+          mEl("div", { class: "m-grow" }, mEl("div", { class: "m-t", text: lv.name + " level" }), mEl("div", { class: "m-s", text: cs.length + " course" + (cs.length === 1 ? "" : "s") })));
+        if (!cs.length) head.append(mEl("button", { class: "m-ic red", "aria-label": "Delete level", onclick: async () => {
+          if (!confirm("Delete the empty " + lv.name + " level?")) return;
+          const d = await mApi("/api/admin/academics", mJson("POST", { action: "delete_level", id: lv.id }));
+          if (!d.ok) msg.textContent = d.data.error || "Could not delete."; else load();
+        } }, mIcon("trash", 18)));
+        box.append(head);
+        cs.forEach((c) => {
+          const row = mEl("div", { class: "m-row", style: "margin-top:8px" },
+            mEl("div", { class: "m-grow" }, mEl("div", { class: "m-t", text: c.code + " · " + c.title }),
+              mEl("div", { class: "m-s", text: (sems.find((s) => s.id === c.semester_id) || {}).name + " semester · " + c.materials + " material" + (Number(c.materials) === 1 ? "" : "s") })),
+            mEl("button", { class: "m-ic", "aria-label": "Edit course", onclick: () => mCourseForm(c, lv, sems, load) }, mIcon("pencil", 18)),
+            mEl("button", { class: "m-ic red", "aria-label": "Delete course", onclick: async () => {
+              if (!confirm("Delete " + c.code + "?")) return;
+              const d = await mApi("/api/admin/academics", mJson("POST", { action: "delete_course", id: c.id }));
+              if (!d.ok) msg.textContent = d.data.error || "Could not delete."; else load();
+            } }, mIcon("trash", 18)));
+          box.append(row);
+        });
+        box.append(mEl("button", { class: "m-pill", style: "margin:12px 0 0", onclick: () => mCourseForm(null, lv, sems, load) }, mIcon("plus", 16), " Add course to " + lv.name + " level"));
+        list.append(box);
+      });
+    };
+    load();
+  });
+}
+function mCourseForm(c, lv, sems, back) {
+  mOpen(c ? "Edit course" : "Add course · " + lv.name + " level", (b) => {
+    const code = mEl("input", { type: "text", maxlength: "12", placeholder: "e.g. MAC 401", value: c ? c.code : "" });
+    const title = mEl("input", { type: "text", maxlength: "120", placeholder: "Course title", value: c ? c.title : "" });
+    const sem = mEl("select", {}, ...sems.map((s) => mEl("option", { value: s.id, text: s.name + " semester" })));
+    if (c) sem.value = c.semester_id;
+    const msg = mEl("p", { class: "m-note" });
+    const go = mEl("button", { class: "m-pill m-wide" }, c ? "Save changes" : "Add course");
+    go.onclick = async () => {
+      go.disabled = true; msg.textContent = "";
+      const body = c ? { action: "edit_course", id: c.id } : { action: "add_course", level_id: lv.id };
+      const r = await mApi("/api/admin/academics", mJson("POST", { ...body, code: code.value, title: title.value, semester_id: sem.value }));
+      go.disabled = false;
+      if (r.ok) mAcademics(); else msg.textContent = r.data.error || "Something went wrong.";
+    };
+    b.append(mEl("label", {}, "Course code"), code, mEl("label", {}, "Course title"), title, mEl("label", {}, "Semester"), sem, go, msg);
+  }, mAcademics);
+}
+mGroups[0][2].splice(2, 0, ["up", "Upload material", () => mMatForm(null)], ["book", "Levels and courses", mAcademics]);
+document.querySelectorAll(".m-nav").forEach((n) => n.remove());
+mInit();
