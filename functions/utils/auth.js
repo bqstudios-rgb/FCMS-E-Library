@@ -1,4 +1,5 @@
 import { sha256Hex } from "./crypto.js";
+import { notifyTelegram } from "./telegram.js";
 
 export const json = (obj, status = 200, headers = {}) =>
   new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...headers } });
@@ -28,6 +29,12 @@ export async function getAdmin({ request, env }) {
 export async function logActivity(env, adminId, action, targetType, targetId, details) {
   await env.DB.prepare("INSERT INTO activity_log (id, admin_id, action, target_type, target_id, details) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(crypto.randomUUID(), adminId, action, targetType, targetId, details || null).run();
+  try {
+    const admin = await env.DB.prepare("SELECT name FROM admins WHERE id = ?").bind(adminId).first();
+    await notifyTelegram(env, "ADMIN ACTIVITY\nAdmin: " + (admin?.name || "Unknown") + "\nAction: " + action + "\nTarget: " + (targetType || "N/A") + "\nTime: " + new Date().toISOString());
+  } catch (error) {
+    console.error("Admin Telegram notification failed:", error);
+  }
 }
 
 export async function checkLock(env, ip, action) {

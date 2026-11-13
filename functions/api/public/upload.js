@@ -4,6 +4,7 @@ import { sha256Hex } from "../../utils/crypto.js";
 import { MAX, STANDARD, MIME, looksRight, cleanName, bufHash, newTicket, newSecret } from "../../utils/files.js";
 import { storageReady, putFile, deleteFile } from "../../utils/storage.js";
 import { CATS } from "../../utils/pub.js";
+import { notifyTelegram } from "../../utils/telegram.js";
 
 export async function onRequestPost({ request, env }) {
   if (!sameOrigin(request)) return json({ error: "Forbidden" }, 403);
@@ -28,7 +29,7 @@ export async function onRequestPost({ request, env }) {
   if (!CATS.includes(category)) return json({ error: "Please choose a material type." }, 400);
   if (!file || typeof file === "string" || !file.size) return json({ error: "Please choose a file." }, 400);
   if (file.size > MAX) return json({ error: "File is too large. The limit is 6 MB." }, 413);
-  const course = await env.DB.prepare("SELECT id, level_id FROM courses WHERE id = ? AND is_approved = 1").bind(courseId).first();
+  const course = await env.DB.prepare("SELECT id, level_id, code, title FROM courses WHERE id = ? AND is_approved = 1").bind(courseId).first();
   if (!course) return json({ error: "Please choose a valid course." }, 400);
 
   const ext = (String(file.name).split(".").pop() || "").toLowerCase();
@@ -51,6 +52,7 @@ export async function onRequestPost({ request, env }) {
     try {
       await env.DB.prepare("INSERT INTO submissions (id, ticket_number, secret_hash, contributor_name, course_id, title, type, description, original_filename, mime_type, size_bytes, file_hash, duplicate_warning, possible_duplicate_of, status, r2_original_key, category) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)")
         .bind(id, ticket, await sha256Hex(ticket + ":" + secret), name, courseId, title, ext, description || null, cleanName(file.name), MIME[ext], buf.byteLength, hash, sim ? 1 : 0, sim ? sim.id : null, stored, category).run();
+      await notifyTelegram(env, "NEW STUDENT SUBMISSION | Contributor: " + name + " | Document: " + title + " | Category: " + category + " | Course: " + (course.code || course.title || "Unknown") + " | Time: " + new Date().toISOString());
       return json({ ok: true, ticket, secret, needsCompression: buf.byteLength > STANDARD }, 201);
     } catch (e) { /* retry with a new ticket */ }
   }
