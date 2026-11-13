@@ -42,10 +42,10 @@ export async function checkLock(env, ip, action) {
   return !!(row && row.lockout_until && row.lockout_until > new Date().toISOString());
 }
 
-export async function recordFailure(env, ip, action) {
+export async function recordFailure(env, ip, action, maxAttempts = 5) {
   const row = await env.DB.prepare("SELECT attempts FROM rate_limits WHERE ip_address = ? AND action = ?").bind(ip, action).first();
   const attempts = (row ? row.attempts : 0) + 1;
-  const lock = attempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null;
+  const lock = attempts >= maxAttempts ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null;
   await env.DB.prepare("INSERT INTO rate_limits (ip_address, action, attempts, lockout_until) VALUES (?, ?, ?, ?) ON CONFLICT(ip_address, action) DO UPDATE SET attempts = excluded.attempts, lockout_until = excluded.lockout_until")
     .bind(ip, action, lock ? 0 : attempts, lock).run();
 }
@@ -75,4 +75,30 @@ export async function verifyTurnstile(env, token, ip, action) {
   } catch (e) {
     return false;
   }
+}
+
+export async function recordLoginFailure(env, ip) {
+  const now = new Date().toISOString();
+  const lock = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+  return await env.DB.prepare(`
+    INSERT INTO rate_limits (ip_address, action, attempts)
+    VALUES (?, 'login', 1)
+    ON CONFLICT(ip_address, action) DO UPDATE SET
+      attempts = CASE
+        WHEN rate_limits.lockout_until IS NOT NULL
+          AND rate_limits.lockout_until <= ? THEN 1
+        WHEN rate_limits.lockout_until IS NOT NULL THEN rate_limits.attempts
+        ELSE rate_limits.attempts + 1
+      END,
+      lockout_until = CASE
+        WHEN rate_limits.lockout_until IS NOT NULL
+          AND rate_limits.lockout_until > ? THEN rate_limits.lockout_until
+        WHEN rate_limits.lockout_until IS NOT NULL
+          AND rate_limits.lockout_until <= ? THEN NULL
+        WHEN rate_limits.attempts + 1 >= 3 THEN ?
+        ELSE NULL
+      END
+    RETURNING attempts, lockout_until
+  `).bind(ip, now, now, now, lock).first();
 }
